@@ -35,10 +35,3 @@ Recommended architecture:
 
 ## Local preview
 You can serve this folder with any static server, e.g. `npx serve .` (Node.js required).
-
-## Changelog (profile/cache fix)
-- Created dogs now show their uploaded photo on cards, leaderboard, detail cover and album.
-- All user-entered text is HTML-escaped; saved data is sanitised on load and photos must be real image data URLs.
-- localStorage access is wrapped so corrupt or full storage no longer breaks the app; photos are compressed smaller (600px).
-- Service worker cache bumped to `doggo-starter-v4` so deployed updates replace old caches.
-- `schema.sql` now enables PostGIS, auto-creates profiles on signup, adds Row Level Security policies, a reports table and a private storage bucket. Test the policies before going live.

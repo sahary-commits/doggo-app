@@ -1,4 +1,4 @@
-const CACHE = "doggo-starter-v4";
+const CACHE = "doggo-starter-v3";
 const FILES = ["/", "/index.html", "/styles.css", "/app.js", "/manifest.webmanifest", "/assets/paw.svg"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting()));
