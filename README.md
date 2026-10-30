@@ -1,44 +1,81 @@
-# DOGGO — Vercel starter
+# DOGGO — cloud + recognition foundation
 
-A responsive, installable PWA prototype for DOGGO. It is designed to deploy as a static site on Vercel and work on desktop and mobile browsers.
+This package extends the working DOGGO front-end with a safer production data model and a server-side candidate-matching endpoint. It is **not yet a live cloud deployment**: it requires a Supabase project, secrets, and a validated individual-dog re-identification model. No API keys are included or hard-coded.
 
-## What works in this starter
-- Responsive DOGGO home screen and navigation
-- Sample dog directory and community leaderboard
-- Dog detail modal with sample album
-- Photo picker / mobile camera capture entry point
-- Demonstration scan → possible match → confirm flow
-- Follow dogs and points persisted in browser local storage
-- PWA manifest and service worker
+## What is included
 
-## Important: prototype vs production
-This is a front-end prototype. It does **not** yet have real user accounts, shared cloud uploads, live maps, AI individual-dog recognition, moderation, or cross-device data sync. The scan match is explicitly sample data. Do not present it as live AI or real location tracking.
+- `supabase/migrations/202610300001_doggo_cloud_foundation.sql`: vector storage for dog photo embeddings, similarity index, candidate search RPC, match-review records, claim requests, blocks, and access controls.
+- `supabase/functions/match-dog/index.ts`: authenticated Edge Function. It verifies the signed-in user owns the uploaded photo, creates a short-lived private image URL, calls a configurable dog re-identification provider, validates the 768-dimensional embedding, and returns ranked candidate dogs for human confirmation.
+- Existing responsive DOGGO front end, profile creation, breed list and community match-selection work are preserved.
 
-## Deploy to Vercel
-1. Create a GitHub repository and upload the contents of this folder.
-2. In Vercel choose **Add New → Project**, import that repository.
-3. Framework preset: **Other**. Build command: leave blank. Output directory: `.` (project root).
-4. Deploy. Vercel will provide a preview URL; connect a custom domain later if desired.
+## Architecture
 
-Vercel Git deployments can create Preview deployments for branches and Production deployments from the production branch. See https://vercel.com/docs/git and https://vercel.com/docs/deployments.
+- **Vercel**: web app hosting.
+- **Supabase Auth**: user accounts and sessions.
+- **Supabase Postgres + pgvector**: dog identities, albums, sightings and visual embeddings.
+- **Supabase Storage**: private original photos; use signed URLs for access.
+- **Supabase Edge Functions**: trusted upload/matching operations. Never put the service-role key in browser code.
+- **Dog re-identification model**: must compare *individual dogs*, not just classify breed or describe an image.
 
-## Next production build
-Recommended architecture:
-- Next.js (Vercel) for web app and server routes
-- Supabase Auth, Postgres, Storage and Row Level Security
-- Mapbox for maps and approximate sighting display
-- Server-side vision pipeline + image embeddings/vector similarity for individual-dog candidate matching
-- Human confirmation for uncertain matches
-- Moderation queue and owner controls before public album publication
+## Setup — one-time infrastructure
 
-`supabase/schema.sql` is an initial relational schema sketch, not a production-ready security policy. Review and add RLS policies before connecting public clients.
+1. Create a Supabase project in a region close to the first launch market.
+2. In Supabase SQL Editor, run the existing `supabase/schema.sql` from this package.
+3. Then run `supabase/migrations/202610300001_doggo_cloud_foundation.sql`.
+4. In Supabase Storage, confirm the private `dog-photos` bucket exists. Keep it private.
+5. Deploy the function:
 
-## Local preview
-You can serve this folder with any static server, e.g. `npx serve .` (Node.js required).
+   ```bash
+   supabase login
+   supabase link --project-ref YOUR_PROJECT_REF
+   supabase functions deploy match-dog --no-verify-jwt
+   ```
 
-## Changelog (profile/cache fix)
-- Created dogs now show their uploaded photo on cards, leaderboard, detail cover and album.
-- All user-entered text is HTML-escaped; saved data is sanitised on load and photos must be real image data URLs.
-- localStorage access is wrapped so corrupt or full storage no longer breaks the app; photos are compressed smaller (600px).
-- Service worker cache bumped to `doggo-starter-v4` so deployed updates replace old caches.
-- `schema.sql` now enables PostGIS, auto-creates profiles on signup, adds Row Level Security policies, a reports table and a private storage bucket. Test the policies before going live.
+6. Set function secrets (never commit real values):
+
+   ```bash
+   supabase secrets set APP_ORIGIN=https://doggo-app-pi.vercel.app
+   supabase secrets set DOG_REID_ENDPOINT=https://YOUR-VALIDATED-PROVIDER-ENDPOINT
+   supabase secrets set DOG_REID_API_KEY=YOUR_PROVIDER_KEY
+   ```
+
+   Supabase provides `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` to deployed Edge Functions in the project environment. Verify these are available in the function's secrets/environment before testing.
+
+7. Add the Supabase project URL and anon/publishable key to Vercel environment variables before wiring the browser client. The service-role key belongs only in Supabase server-side secrets.
+
+## Recognition provider contract
+
+The Edge Function expects a provider endpoint accepting:
+
+```json
+{
+  "image_url": "short-lived-signed-image-url",
+  "task": "individual_dog_reidentification"
+}
+```
+
+It must return:
+
+```json
+{
+  "model": "provider-model-version",
+  "embedding": [0.01, 0.02]
+}
+```
+
+The real response must contain exactly **768 finite numbers**. This is a deliberate adapter contract, not a claim that a generic image model can identify individual dogs. Before launch, select and benchmark a dog re-identification model on a representative dataset (different angles, lighting, grooming, age, collars, and time gaps). Calibrate similarity thresholds on held-out dogs. A similarity score is not a probability. Keep user confirmation and a review queue; never auto-merge dog identities based on an unvalidated threshold.
+
+## Critical next engineering steps before public launch
+
+- Wire Supabase Auth into the sign-in/profile UI.
+- Replace browser-only dog/photo/follow/reaction storage with Supabase queries and Storage uploads.
+- Call `match-dog` after a photo upload and render candidates; save user confirmation/rejection into `dog_match_reviews`.
+- Add moderation/admin workflows for pending community photos and claims.
+- Add server-side location coarsening/jitter before publishing sightings. Never publish home-level coordinates or real-time tracking.
+- Add rate limits, image MIME/size validation, malware/content moderation, abuse reporting review, retention/deletion workflows, backups and monitoring.
+- Test every RLS policy with anonymous, normal user, owner, contributor and moderator roles before production.
+- Add privacy policy, terms, consent and account/photo deletion flow.
+
+## Important honesty about current status
+
+The current browser app remains a front-end prototype. The new SQL and Edge Function are backend foundations; they do not activate shared cloud accounts or AI recognition until the Supabase project is created, migration/function are deployed, the provider is selected and the app UI is connected. The demo's sample dogs are not a real DOGGO community database.

@@ -1,0 +1,4 @@
+project_id = "doggo"
+
+[functions.match-dog]
+verify_jwt = false

@@ -101,17 +101,7 @@
       <span class="eyebrow">A NEW MEMBER OF THE PACK</span><h2>Create a dog profile</h2>
       <p class="muted">Add the details you know. You can update them later.</p>
       <label class="field-label" for="new-dog-name">Dog's name *</label><input id="new-dog-name" class="text-input" required maxlength="40" placeholder="e.g. Milo">
-      <label class="field-label" for="new-dog-breed">Breed</label>
-      <select id="new-dog-breed" class="text-input">
-        <option value="">Select a breed (optional)</option>
-        <option>Mixed breed</option><option>Unknown</option>
-        <optgroup label="Popular breeds">
-          <option>Australian Shepherd</option><option>Beagle</option><option>Belgian Malinois</option><option>Border Collie</option><option>Boxer</option><option>Bulldog</option><option>Cane Corso</option><option>Chihuahua</option><option>Cocker Spaniel</option><option>Dachshund</option><option>Doberman Pinscher</option><option>French Bulldog</option><option>German Shepherd</option><option>Golden Retriever</option><option>Great Dane</option><option>Husky</option><option>Labrador Retriever</option><option> Maltese</option><option>Miniature Pinscher</option><option>Pomeranian</option><option>Poodle</option><option>Pug</option><option>Rottweiler</option><option>Samoyed</option><option>Shih Tzu</option><option>Staffordshire Bull Terrier</option><option>Yorkshire Terrier</option>
-        </optgroup>
-        <optgroup label="Other">
-          <option>Other / not listed</option>
-        </optgroup>
-      </select>
+      <label class="field-label" for="new-dog-breed">Breed</label><input id="new-dog-breed" class="text-input" maxlength="60" placeholder="e.g. Mixed breed / Unknown">
       <label class="field-label" for="new-dog-place">Area or neighbourhood</label><input id="new-dog-place" class="text-input" maxlength="80" placeholder="e.g. Ramat Gan">
       <label class="field-label" for="new-dog-description">A little about this dog</label><textarea id="new-dog-description" class="text-input" rows="2" maxlength="240" placeholder="Personality, markings, anything helpful..."></textarea>
       <label class="upload-zone" for="new-dog-photo"><span class="upload-icon">📸</span><b>Add a photo (optional)</b><small>Choose a photo from your device</small><input id="new-dog-photo" type="file" accept="image/*"></label>
