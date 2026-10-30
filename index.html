@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#18372d">
+  <meta name="description" content="Discover dogs, share sightings and build every dog's story with DOGGO.">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/assets/paw.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <title>DOGGO — Every dog has a story</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="DOGGO home" data-nav="home">
+        <span class="brand-mark">🐾</span><span>DOGGO</span>
+      </a>
+      <div class="top-actions">
+        <span class="points-pill">✦ <b id="points">250</b> pts</span>
+        <button class="icon-btn" id="notifications" aria-label="Notifications">♧</button>
+        <div class="avatar">S</div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">YOUR NEIGHBOURHOOD, FULL OF STORIES</span>
+          <h1>Who's that<br><em>good dog?</em></h1>
+          <p>Meet the dogs around you. Add a photo, find their profile and become part of their story.</p>
+          <button class="btn btn-lime" data-action="scan">＋ Spot a dog</button>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="sun"></div><div class="hero-dog">🐕</div>
+          <span class="floating-tag tag-one">NEW SIGHTING</span>
+          <span class="floating-tag tag-two">🐾 12 nearby</span>
+        </div>
+      </section>
+
+      <section class="stats-row" aria-label="Community stats">
+        <div><b>1,284</b><span>dogs discovered</span></div>
+        <div><b>3,902</b><span>community photos</span></div>
+        <div><b>186</b><span>spots today</span></div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading"><div><span class="eyebrow">THE NEIGHBOURHOOD PACK</span><h2>Recently spotted</h2></div><button class="text-btn" data-nav="explore">Explore all ↗</button></div>
+        <div class="dog-grid" id="recent-dogs"></div>
+      </section>
+
+      <section class="discovery-banner">
+        <div><span class="eyebrow">YOUR NEXT ADVENTURE</span><h2>Every walk is a<br>chance to discover.</h2><p>Find new faces, collect badges and help the community grow.</p><button class="btn btn-dark" data-nav="explore">Explore the map →</button></div>
+        <div class="banner-emoji">🦮</div>
+      </section>
+
+      <section class="section community-section">
+        <div class="section-heading"><div><span class="eyebrow">COMMUNITY FAVOURITES</span><h2>Top dogs this week</h2></div><button class="text-btn" data-nav="community">Leaderboard ↗</button></div>
+        <div id="top-dogs" class="leader-list"></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="nav-item active" data-nav="home"><span>⌂</span>Home</button>
+      <button class="nav-item" data-nav="explore"><span>⌖</span>Explore</button>
+      <button class="nav-scan" data-action="scan" aria-label="Scan a dog"><span>＋</span></button>
+      <button class="nav-item" data-nav="community"><span>♡</span>Community</button>
+      <button class="nav-item" data-nav="profile"><span>◉</span>Profile</button>
+    </nav>
+  </div>
+
+  <dialog id="scan-dialog" class="modal">
+    <form method="dialog" class="modal-card" id="scan-form">
+      <button class="close-btn" value="cancel" aria-label="Close">×</button>
+      <span class="eyebrow">ADD TO THE PACK</span><h2>Spot a dog</h2>
+      <p class="muted">Take a photo or choose one from your phone. In this starter build, matching is a demo flow; real AI matching will be connected in the next development step.</p>
+      <label class="upload-zone" for="dog-photo"><span class="upload-icon">📸</span><b>Choose a dog photo</b><small>Camera or photo library</small><input id="dog-photo" type="file" accept="image/*" capture="environment"></label>
+      <img id="photo-preview" class="photo-preview hidden" alt="Selected dog preview">
+      <label class="field-label" for="sighting-place">Where did you see this dog?</label>
+      <input id="sighting-place" class="text-input" placeholder="e.g. Yarkon Park, Tel Aviv">
+      <label class="field-label" for="dog-note">Anything to add? (optional)</label>
+      <textarea id="dog-note" class="text-input" rows="2" placeholder="A friendly dog playing by the fountain..."></textarea>
+      <button class="btn btn-primary full" type="submit">Find this dog →</button>
+    </form>
+  </dialog>
+
+  <dialog id="match-dialog" class="modal">
+    <div class="modal-card">
+      <button class="close-btn" data-close="match-dialog" aria-label="Close">×</button>
+      <span class="eyebrow">POSSIBLE COMMUNITY MATCH</span><h2>Have we met?</h2>
+      <div class="match-card"><div class="dog-avatar avatar-gold">🐕</div><div><b>Max</b><span>Golden Retriever · Ramat Gan</span><small>Example match · not live AI</small></div><strong>94%</strong></div>
+      <p class="muted">This is a sample match to demonstrate the flow. Real individual-dog recognition needs an AI matching service and verified training data.</p>
+      <button class="btn btn-primary full" id="confirm-match">Yes, that's Max</button>
+      <button class="btn btn-quiet full" id="new-dog">No, create a new dog profile</button>
+    </div>
+  </dialog>
+
+  <dialog id="dog-dialog" class="modal">
+    <div class="modal-card dog-detail-card">
+      <button class="close-btn" data-close="dog-dialog" aria-label="Close">×</button>
+      <div class="detail-cover" id="detail-cover">🐕</div>
+      <span class="eyebrow">COMMUNITY DOG PROFILE</span><h2 id="detail-name">Max</h2>
+      <p class="muted" id="detail-breed">Golden Retriever · Ramat Gan</p>
+      <div class="detail-stats"><div><b id="detail-photos">34</b><small>Photos</small></div><div><b id="detail-likes">128</b><small>Likes</small></div><div><b id="detail-spots">12</b><small>Sightings</small></div></div>
+      <div class="last-seen"><span>📍</span><div><b>Last reported sighting</b><small id="detail-location">Ramat Gan Park · 12 min ago</small><small>Approximate location shown for privacy</small></div></div>
+      <div class="section-heading compact"><h3>Community album</h3><button class="text-btn" id="add-album-photo">＋ Add photo</button></div>
+      <div class="album-grid"><div>🐕</div><div>🌳</div><div>🦴</div><div>🐾</div></div>
+      <button class="btn btn-primary full" id="follow-dog">♡ Follow this dog</button>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

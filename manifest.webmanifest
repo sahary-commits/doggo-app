@@ -1,0 +1,17 @@
+{
+  "name": "DOGGO \u2014 Every dog has a story",
+  "short_name": "DOGGO",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f8f3",
+  "theme_color": "#18372d",
+  "description": "Discover dogs, share sightings and build every dog's story.",
+  "icons": [
+    {
+      "src": "/assets/paw.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
