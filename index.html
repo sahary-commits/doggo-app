@@ -95,6 +95,21 @@
     </div>
   </dialog>
 
+  <dialog id="create-dog-dialog" class="modal">
+    <form class="modal-card" id="create-dog-form">
+      <button type="button" class="close-btn" data-close="create-dog-dialog" aria-label="Close">×</button>
+      <span class="eyebrow">A NEW MEMBER OF THE PACK</span><h2>Create a dog profile</h2>
+      <p class="muted">Add the details you know. You can update them later.</p>
+      <label class="field-label" for="new-dog-name">Dog's name *</label><input id="new-dog-name" class="text-input" required maxlength="40" placeholder="e.g. Milo">
+      <label class="field-label" for="new-dog-breed">Breed</label><input id="new-dog-breed" class="text-input" maxlength="60" placeholder="e.g. Mixed breed / Unknown">
+      <label class="field-label" for="new-dog-place">Area or neighbourhood</label><input id="new-dog-place" class="text-input" maxlength="80" placeholder="e.g. Ramat Gan">
+      <label class="field-label" for="new-dog-description">A little about this dog</label><textarea id="new-dog-description" class="text-input" rows="2" maxlength="240" placeholder="Personality, markings, anything helpful..."></textarea>
+      <label class="upload-zone" for="new-dog-photo"><span class="upload-icon">📸</span><b>Add a photo (optional)</b><small>Choose a photo from your device</small><input id="new-dog-photo" type="file" accept="image/*"></label>
+      <img id="new-dog-preview" class="photo-preview hidden" alt="New dog preview">
+      <button class="btn btn-primary full" type="submit">Create dog profile →</button>
+    </form>
+  </dialog>
+
   <dialog id="dog-dialog" class="modal">
     <div class="modal-card dog-detail-card">
       <button class="close-btn" data-close="dog-dialog" aria-label="Close">×</button>
@@ -104,7 +119,7 @@
       <div class="detail-stats"><div><b id="detail-photos">34</b><small>Photos</small></div><div><b id="detail-likes">128</b><small>Likes</small></div><div><b id="detail-spots">12</b><small>Sightings</small></div></div>
       <div class="last-seen"><span>📍</span><div><b>Last reported sighting</b><small id="detail-location">Ramat Gan Park · 12 min ago</small><small>Approximate location shown for privacy</small></div></div>
       <div class="section-heading compact"><h3>Community album</h3><button class="text-btn" id="add-album-photo">＋ Add photo</button></div>
-      <div class="album-grid"><div>🐕</div><div>🌳</div><div>🦴</div><div>🐾</div></div>
+      <div class="album-grid" id="album-grid"><div>🐕</div><div>🌳</div><div>🦴</div><div>🐾</div></div>
       <button class="btn btn-primary full" id="follow-dog">♡ Follow this dog</button>
     </div>
   </dialog>
