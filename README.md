@@ -118,3 +118,19 @@ Upload the **contents** of this folder to the root of the existing GitHub reposi
 - Starter sample dogs are illustrative local demo cards, not real community records.
 
 Test with a new account: sign up, confirm the email if Supabase requests it, sign in, open Profile, create a dog profile, then refresh and confirm it remains visible. If the photo is pending moderation, it is visible to its contributor but not other users until approved.
+
+## Community album update (2026-10-30)
+
+This build adds user photo contributions to real community dog profiles. Uploads are stored in the private `dog-photos` bucket and inserted as `pending`. The dog creator or claimed owner can approve/reject pending contributions in the profile album. Approved photos are visible to signed-in community users through the existing RLS read policy; pending photos are visible to the contributor and dog owner only.
+
+Before deploying this update, run `supabase/migrations/202610300002_community_album_moderation.sql` in the Supabase SQL Editor. This migration grants authenticated users update access only to the moderation status column and adds an owner-only moderation policy. Do not run the earlier schema or migration files again.
+
+Limitations: there is not yet a platform-wide moderator/admin queue, photo content scanning, or automated dog identity recognition. Owners can moderate photos on their own dog profiles only.
+
+## Trainer accounts and ownership attribution (2026-10-30)
+
+Run `supabase/migrations/202610300003_trainer_accounts.sql` after the earlier schema and community album migration. It adds `profiles.account_type` (`owner` or `trainer`).
+
+In the Profile page, a signed-in user can switch between Dog Owner and Trainer account modes. Trainer-created dog profiles are public, are created with `claimed_by = NULL` and `claim_status = 'unclaimed'`, and show that the owner has not yet claimed the profile. The creator is displayed as the trainer/manager. Owner-created dog profiles are immediately attributed to the signed-in user as `claimed_by` with `claim_status = 'verified'`.
+
+Trainer status is currently self-selected and is not independently credential-verified. The current build supports the trainer role and attribution display, but a complete owner claim-request/review workflow and trainer verification process remain future work. Do not describe a trainer as professionally verified based solely on this role.
