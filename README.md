@@ -79,3 +79,19 @@ The real response must contain exactly **768 finite numbers**. This is a deliber
 ## Important honesty about current status
 
 The current browser app remains a front-end prototype. The new SQL and Edge Function are backend foundations; they do not activate shared cloud accounts or AI recognition until the Supabase project is created, migration/function are deployed, the provider is selected and the app UI is connected. The demo's sample dogs are not a real DOGGO community database.
+
+
+## DOGGO Supabase project configuration (2026-10-30)
+
+The browser client is now configured with the supplied project URL and publishable key in `supabase-config.js`. This key is intended to be public; database safety depends on the Row Level Security policies in the SQL schema. Do not add a service-role key to this file or to Vercel.
+
+**Important:** this step initializes the Supabase SDK but does not yet migrate DOGGO's profile, photo, follow, sighting, or feed features from localStorage to the cloud. It is not evidence that shared accounts or cloud dog profiles are active.
+
+Next setup steps:
+1. Open the Supabase SQL Editor for project `vgaszqqogqjmovepkgir`.
+2. Run `supabase/schema.sql` first, then `supabase/migrations/202610300001_doggo_cloud_foundation.sql`.
+3. Confirm the private `dog-photos` Storage bucket exists.
+4. In Supabase Authentication settings, configure the allowed site URL as `https://doggo-app-pi.vercel.app` and add that URL to the redirect allow list.
+5. Redeploy the updated project to Vercel.
+
+The remaining application work is to add sign-in/sign-up UI and replace browser-only data operations with authenticated Supabase queries and Storage uploads. Individual-dog AI matching also remains inactive until a validated dog re-identification provider is selected and deployed.
