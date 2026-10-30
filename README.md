@@ -95,3 +95,26 @@ Next setup steps:
 5. Redeploy the updated project to Vercel.
 
 The remaining application work is to add sign-in/sign-up UI and replace browser-only data operations with authenticated Supabase queries and Storage uploads. Individual-dog AI matching also remains inactive until a validated dog re-identification provider is selected and deployed.
+
+
+## DOGGO cloud-connected app update
+
+This build now connects the browser app to the configured Supabase project for:
+- Email/password sign-up and sign-in using Supabase Auth.
+- Loading public dog profiles from `public.dogs` (plus the clearly illustrative starter sample cards).
+- Creating dog profiles in `public.dogs` for the signed-in user.
+- Uploading an optional profile photo to the private `dog-photos` bucket and recording it in `public.dog_photos` as `pending` moderation.
+- Creating/removing follows in `public.dog_follows`.
+
+The browser uses only the public publishable key in `supabase-config.js`; never add a service-role key. The database and Storage RLS policies remain essential. Profile images are displayed using short-lived signed URLs.
+
+### Deploy this app
+Upload the **contents** of this folder to the root of the existing GitHub repository connected to Vercel, commit, and wait for Vercel to deploy. The Supabase URL and publishable key are already configured in `supabase-config.js`. No further SQL is required for these implemented flows because the base schema and cloud-foundation migration have already been applied in the project.
+
+### Current limitations (not yet implemented)
+- Individual-dog AI recognition is not active. The scan screen does not claim to identify a dog.
+- Map-based discovery and real geolocation sightings are not active.
+- Community album contributions beyond the initial profile photo, moderation/admin tools, account deletion, and full profile editing still need implementation.
+- Starter sample dogs are illustrative local demo cards, not real community records.
+
+Test with a new account: sign up, confirm the email if Supabase requests it, sign in, open Profile, create a dog profile, then refresh and confirm it remains visible. If the photo is pending moderation, it is visible to its contributor but not other users until approved.

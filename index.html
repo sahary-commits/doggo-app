@@ -19,7 +19,7 @@
       <div class="top-actions">
         <span class="points-pill">✦ <b id="points">250</b> pts</span>
         <button class="icon-btn" id="notifications" aria-label="Notifications">♧</button>
-        <div class="avatar">S</div>
+        <button class="account-btn" id="auth-button" type="button">Sign in</button>
       </div>
     </header>
 
@@ -68,6 +68,20 @@
       <button class="nav-item" data-nav="profile"><span>◉</span>Profile</button>
     </nav>
   </div>
+
+
+  <dialog id="auth-dialog" class="modal">
+    <form class="modal-card" id="auth-form">
+      <button type="button" class="close-btn" data-close="auth-dialog" aria-label="Close">×</button>
+      <span class="eyebrow">WELCOME TO THE PACK</span><h2 id="auth-title">Sign in to DOGGO</h2>
+      <p class="muted" id="auth-description">Sign in to create dog profiles and share them with the community.</p>
+      <label class="field-label" for="auth-email">Email</label><input class="text-input" id="auth-email" type="email" autocomplete="email" required placeholder="you@example.com">
+      <label class="field-label" for="auth-password">Password</label><input class="text-input" id="auth-password" type="password" autocomplete="current-password" minlength="6" required placeholder="At least 6 characters">
+      <button class="btn btn-primary full" id="auth-submit" type="submit">Sign in</button>
+      <button class="text-btn full" id="auth-toggle" type="button">New to DOGGO? Create an account</button>
+      <button class="text-btn full hidden" id="auth-signout" type="button">Sign out</button>
+    </form>
+  </dialog>
 
   <dialog id="scan-dialog" class="modal">
     <form method="dialog" class="modal-card" id="scan-form">
